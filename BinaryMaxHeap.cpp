@@ -7,6 +7,7 @@
 
 #include "BinaryMaxHeap.h"
 #define INT_MAX 1000
+#include <queue>
 
 void swap(int *x, int *y)
 {
@@ -26,10 +27,19 @@ BinaryMaxHeap::BinaryMaxHeap()
 BinaryMaxHeap::BinaryMaxHeap(const BinaryMaxHeap& orig) {
 }
 
+void clear(Node* node) {
+        if(node) {
+            if(node->children[0]) clear(node->children[0]);
+            if(node->children[1]) clear(node->children[1]);
+            delete []node->cdr;
+            delete node;
+        }
+    }
+
 BinaryMaxHeap::~BinaryMaxHeap() 
 {
     cout << "\n~BinaryMaxHeap\n";
-    
+    clear(root); 
 }
 
 void BinaryMaxHeap::MoveOneUp (Node *n)
@@ -70,9 +80,58 @@ void BinaryMaxHeap::MoveOneUp (Node *n)
 }
 
 
-void BinaryMaxHeap::Insert(char* temp, int money)
+void BinaryMaxHeap::Insert(char *temp, char tarrifarray[][3][4])
 {
-    Node *node = new Node(temp, money);
+    //cout << "binary heap token = " << temp << endl;
+    char *token, *caller;
+    double money = 0.0;
+    int counter = 1, duration, tarrif, type;
+    token = strtok(temp, ";");  //id
+    while( token != NULL && counter <= 8)
+    {
+        /*token = strtok(NULL, ";"); //caller
+        token = strtok(NULL, ";"); //callee
+        token = strtok(NULL, ";"); //date
+        token = strtok(NULL, ";"); //init time
+        token = strtok(NULL, ";"); //duration
+        duration = atoi (token);
+        token = strtok(NULL, ";"); //type
+        type = atoi (token);
+        token = strtok(NULL, ";"); //tarrif
+        tarrif = atoi (token);*/
+        //cout << "token = " << token << "        " << counter << endl;
+        if(counter == 6) duration = atoi (token); //sscanf(token, "%lf", &duration);
+        else if (counter == 7) type = atoi (token); //sscanf(token, "%lf", &type);
+        else if (counter == 8) tarrif = atoi (token); //sscanf(token, "%lf", &tarrif);
+        else if (counter == 2) 
+        {
+            caller = new char[strlen(token)];
+            strcpy(caller, token);
+        }
+        else duration = 0;
+        token = strtok(NULL, ";");
+        counter++;
+    }
+    //cout << duration << "\t\t" << type << "\t\t" << tarrif << endl; 
+    //return;
+    
+    for(int i = 0; i < 5; i++)
+    {
+        if(atoi(tarrifarray[i][0]) == type && atoi(tarrifarray[i][1]) == tarrif)
+        {
+            double cost;
+            sscanf(tarrifarray[i][2], "%lf", &cost);
+            if (i == 1) money = cost; 
+            else money = duration * cost;
+            break;
+        }
+        
+    }
+    //cout << "moneyyyyyy" << money << endl;
+    
+    Node *node = new Node(caller, money);
+    //cout << "moneyyyyyy" << money << endl;
+    delete []caller;
     // If the heap is empty, insert root node.
     if (root == NULL) {
         root = node;
@@ -135,7 +194,7 @@ void BinaryMaxHeap::Insert(char* temp, int money)
     node->children[1] = NULL;
 
     // Restore the heap property.
-    while (node->parent != NULL && node->parent->cost > node->cost) 
+    while (node->parent != NULL && node->parent->cost < node->cost) 
     {
         MoveOneUp(node);
     }
@@ -216,6 +275,34 @@ void BinaryMaxHeap::Remove (Node *node)
             }
         }
     }
+}
+
+// Print the tree level-order assisted by queue
+void BinaryMaxHeap::levelOrder() {
+   // Create a queue
+    Node* n = root;
+    queue<Node*> q;
+
+   // Push the root
+   q.push(n);
+
+   while ( ! q.empty() )
+   {
+       // Dequeue a node from front
+       Node* v = q.front();
+       cout << v->cost << " ";
+
+       // Enqueue the left children
+       if ( v->children[0] != NULL )
+            q.push(v->children[0]);
+
+       // Enqueue the right children
+       if ( v->children[1] != NULL )
+            q.push(v->children[1]);
+
+       // Pop the visited node
+       q.pop();
+   }
 }
 
 

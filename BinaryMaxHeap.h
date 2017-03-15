@@ -21,9 +21,10 @@ struct Node {
     //Node *right;
     Node *children[2];
     char* cdr;
-    int cost;
-    Node(char* temp, int money)
+    double cost;
+    Node(char* temp, double money)
     {
+        cdr = new char[strlen(temp)];
         strcpy(cdr, temp); cost = money;
     };
 };
@@ -33,6 +34,8 @@ public:
     BinaryMaxHeap();
     BinaryMaxHeap(const BinaryMaxHeap& orig);
     virtual ~BinaryMaxHeap();
+    
+    void levelOrder() ;
     //void MaxHeapify(int i );
  
     //int parent(int i) { return (i-1)/2; }
@@ -58,7 +61,7 @@ public:
     // Inserts a new key 'k'
     //void insertKey(int k);
     void MoveOneUp (Node *n);
-    void Insert(char* temp, int money);
+    void Insert(char* temp, char tarrifarray[][3][4]);
     void Remove (Node *node);
     void ReplaceNode (Node *d, Node *s);
 private:

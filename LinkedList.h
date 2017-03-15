@@ -45,7 +45,7 @@ public:
 
     ~SimpleList()
     {
-        cout << "\n~SimpleList\n";
+        //cout << "\n~SimpleList\n";
         Bucket * p = head;
         Bucket * q = head;
         while (q != NULL)
@@ -91,6 +91,7 @@ public:
             head =  new Bucket(0);
         }
         /*We need to add a new node to store cdrs*/
+        length += 20;
         //cout <<  "6" << endl;
         Bucket *n2 = new Bucket(1); 
         //cout <<  "7" << endl;
@@ -104,13 +105,192 @@ public:
     }
 
     // returns the first element in the list and deletes the Node.
-    int popValue(){
-        Bucket *n = head;
+    int popValue(char *cdrid){
+        char *token;
+        Bucket *n = head->next;
         //int ret = n->array;
+        while (n != NULL)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                //cout << "n->array[i] = " << n->array[i] << endl;
+                token = strtok(n->array[i], ";");
+                //cout << "token = " << token << endl;
+                if (strcmp(token, cdrid) == 0)
+                {
+                    strcpy(n->array[i] , "-");
+                    n->full = 0;
+                    return 1;
+                }
+            }
+            
+        }
+        //head = head->next;
+        //delete n;
+        return 0;
+    }
+    
+    void findInfo(int counter, char *arr[])
+    {
+        char *token, *temp;      
+        Bucket *n = head->next;
+        while (n != NULL)
+        {
+            //cout << "1" << endl;
+            for (int i = 0; i < 10; i++)
+            {       
+                //cout << "2" << endl;
+                if (counter  == 0){ printList(); return;}
+                else if (counter == 2)
+                {
+                    //cout << "3" << endl;
+                    temp = new char[strlen(n->array[i])+1];
+                    strcpy(temp, n->array[i]);
+                    token = strtok(temp, ";");                    
+                    token = strtok(NULL, ";");
+                    //cout << "callee = " << token << endl;
+                    token = strtok(NULL, ";");
+                    delete temp;
+                    //cout << "date = " << token << endl;
+                    if(strlen(arr[1]) != strlen(token)){token = strtok(NULL, ";");}
+                    //cout << "hour = " << token << endl;
+                    if (strcmp(token,arr[1]) > 0 && strcmp(token,arr[2]) < 0)
+                        cout << n->array[i] << endl;
+                    
+                }
+                else
+                {
+                    //cout << "4" << endl;
+                    temp = new char[strlen(n->array[i])+1];
+                    //cout << "5" << endl;
+                    strcpy(temp, n->array[i]);
+                    //cout << "6" << endl;
+                    char *token2;
+                    token = strtok(temp, ";");
+                    token = strtok(NULL, ";");
+                    token = strtok(NULL, ";");
+                    token2 = strtok(NULL, ";");
+                    //cout << "7" << endl;
+                    delete temp;
+                    //cout << "8" << endl;
+                    if (strcmp(token2,arr[1]) > 0 && strcmp(token2,arr[3]) < 0 && strcmp(token,arr[2]) > 0 && strcmp(token,arr[4]) < 0 )
+                        cout << n->array[i] << endl;
+                    
+                }  
+                //cout << "5" << endl;
+                if(strcmp(n->array[i + 1], "-") == 0) return;
+            }
+            if (n->next != NULL )n = n->next;
+            else return;
+        }
+        return;
+    }
+    
+    void storeCallee(int &counter, char *arr[], int flag)
+    {
+        char *token, *temp;      
+        Bucket *n = head->next;
+        while (n != NULL)
+        {
+            //cout << "11111111111111" << endl;
+            for (int i = 0; i < 10; i++)
+            {       
+                if (flag == 2 )
+                {
+                    counter++;
+                    arr[counter] = new char[strlen(n->array[i]) + 1];
+                    strcpy((arr[counter]), n->array[i]);
+                }
+                else
+                {
+                    //cout << "1" << endl;
+                    temp = new char[strlen(n->array[i]) + 1];
+                    //cout << "2" << endl;
+                    strcpy(temp, n->array[i]);
+                    //cout << "3" << temp << endl;
+                    token = strtok(temp, ";"); 
+                    //cout << "4" << endl;
+                    token = strtok(NULL, ";"); // This is callee
+                    counter++;
+                    arr[counter] = new char[strlen(token) + 1];
+                
+                    //cout << "6" << endl;
+                    strcpy((arr[counter]), token);
+                    //cout << "4" << endl;
 
-        head = head->next;
-        delete n;
-        //return ret;
+                    delete temp;
+                    //arr = (char**)realloc(*arr, (counter+1)*sizeof(char*));
+                    //cout << "counter =   " <<  counter << endl;
+                }
+                
+                
+                //cout << "7  " <<  *(arr[counter]) << endl;
+                if(strcmp(n->array[i + 1], "-") == 0) return;
+                //cout << "8" << endl;
+                
+               // cout << "9" << endl;
+            }
+            if (n->next != NULL )n = n->next;
+            else return;
+            //cout << "10" << endl;
+        }
+        //cout << "11" << endl;
+        return;
+    }
+    
+    int checkCallee(int &counter, char *arr[])
+    {
+        char *token, *temp;      
+        Bucket *n = head->next;
+        while (n != NULL)
+        {            
+            for (int i = 0; i < 10; i++)
+            {       
+                temp = new char[strlen(n->array[i])+1];
+                strcpy(temp, n->array[i]);
+                token = strtok(temp, ";"); 
+                token = strtok(NULL, ";"); // This is callee
+                delete temp;
+                //counter++;
+                for(int j = 0; j < counter; j++)
+                {
+                    //cout << token << "      " << arr[j] << endl;
+                    if(strcmp(token, arr[j])== 0){ return 1;}
+                }
+                if(strcmp(n->array[i + 1], "-") == 0) return 0;
+            }
+            if (n->next != NULL )n = n->next;
+            else return 0;
+        }
+        return 0;
+    }
+    
+    void TopDest(char *caller, char *contacts[])
+    {
+        char *token, *temp;    
+        
+        /*Bucket *n = head->next;
+        while (n != NULL)
+        {            
+            for (int i = 0; i < 10; i++)
+            {       
+                temp = new char[strlen(n->array[i])+1];
+                strcpy(temp, n->array[i]);
+                token = strtok(temp, ";"); 
+                token = strtok(NULL, ";"); // This is callee
+                delete temp;
+                //counter++;
+                for(int j = 0; j < counter; j++)
+                {
+                    //cout << token << "      " << arr[j] << endl;
+                    if(strcmp(token, arr[j])== 0){ return 1;}
+                }
+                if(strcmp(n->array[i + 1], "-") == 0) return 0;
+            }
+            if (n->next != NULL )n = n->next;
+            else return 0;
+        }*/
+        return ;
     }
     
     void printList()      //Print whole bucket
@@ -176,7 +356,8 @@ public:
     virtual ~LinkedList();
     // Inserts an item at the end of the list.
     void insertPoint(char *id, char *info, int found);
-    int SearchBucket(char *tmp);
+    int SearchBucket(char *tmp, char *cdrid, int flag, char *arr[], int &counter);
+    int Search(char *tmp, char *info, int flag, char ***arr, int &counter);
     void printList();    
     // Returns the length of the list.
     int getLength();

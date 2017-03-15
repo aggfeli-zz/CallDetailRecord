@@ -20,7 +20,7 @@ LinkedList::LinkedList(const LinkedList& orig) {
 
 LinkedList::~LinkedList()       //Linked List Destructor
 {
-    cout << "\n~LinkedList\n";
+    //cout << "\n~LinkedList\n";
     Point * p = head;
     Point * q = head;
     while (q != NULL)
@@ -36,15 +36,45 @@ LinkedList::~LinkedList()       //Linked List Destructor
     }
 }
 
-int LinkedList::SearchBucket(char *tmp)
+int LinkedList::SearchBucket(char *tmp, char *info, int flag, char **arr, int &counter)
 {
+    //for(int i = 0; i < counter; i++) {cout << arr[i] << endl; }
     Point *temp = head->next;
     //int found = 0;
     while(temp != NULL)
     {
         if (strcmp(temp->number, tmp) == 0)
         {
-            return 1;
+            if (flag == 1)
+            {
+                //cout << "poooop" << endl;
+                temp->InfoList->popValue(info);
+                return 1;
+            }
+            else if (flag == 2)
+            {
+                temp->InfoList->findInfo(counter, arr);
+                return 1;
+            }
+            else if (flag == 3)
+            {
+                temp->InfoList->storeCallee(counter, arr, 1);
+                return 1;
+            }
+            else if (flag == 4)
+            {
+                //cout <<"mphkaaa     " << temp->number << endl;
+                return temp->InfoList->checkCallee(counter, arr);               
+            }
+            else if(flag == 5)
+            {
+                //cout << "here" << endl;               
+                temp->InfoList->storeCallee(counter, arr, 2);
+                //for(int i = 0; i <= counter; i++) cout << contacts[i] << endl;
+                
+                //temp->InfoList->TopDest(temp->number, contacts);
+            }
+            else return 1;
         }
         temp = temp->next;
     }        
