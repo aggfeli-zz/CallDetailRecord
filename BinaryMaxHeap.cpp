@@ -82,27 +82,25 @@ void BinaryMaxHeap::MoveOneUp (Node *n)
 
 void BinaryMaxHeap::Insert(char *temp, char tarrifarray[][3][4])
 {
-    //cout << "binary heap token = " << temp << endl;
     char *token, *caller;
     double money = 0.0;
     int counter = 1, duration, tarrif, type;
     token = strtok(temp, ";");  //id
-    while( token != NULL && counter <= 8)
-    {
-        /*token = strtok(NULL, ";"); //caller
-        token = strtok(NULL, ";"); //callee
-        token = strtok(NULL, ";"); //date
-        token = strtok(NULL, ";"); //init time
-        token = strtok(NULL, ";"); //duration
-        duration = atoi (token);
-        token = strtok(NULL, ";"); //type
-        type = atoi (token);
-        token = strtok(NULL, ";"); //tarrif
-        tarrif = atoi (token);*/
-        //cout << "token = " << token << "        " << counter << endl;
-        if(counter == 6) duration = atoi (token); //sscanf(token, "%lf", &duration);
-        else if (counter == 7) type = atoi (token); //sscanf(token, "%lf", &type);
-        else if (counter == 8) tarrif = atoi (token); //sscanf(token, "%lf", &tarrif);
+    while( token != NULL && counter <= 9)
+    {       
+        if(counter == 6) duration = atoi (token); 
+        else if (counter == 7) type = atoi (token); 
+        else if (counter == 8) tarrif = atoi (token); 
+        else if (counter == 9) 
+        { 
+            int fault = atoi (token);
+            if (fault < 200 || fault > 299)
+            {
+                //cout << "fault condition, don't insert into max heap" << endl;
+                delete []caller;
+                return;
+            }
+        }
         else if (counter == 2) 
         {
             caller = new char[strlen(token)];
@@ -112,8 +110,7 @@ void BinaryMaxHeap::Insert(char *temp, char tarrifarray[][3][4])
         token = strtok(NULL, ";");
         counter++;
     }
-    //cout << duration << "\t\t" << type << "\t\t" << tarrif << endl; 
-    //return;
+
     
     for(int i = 0; i < 5; i++)
     {
@@ -127,10 +124,9 @@ void BinaryMaxHeap::Insert(char *temp, char tarrifarray[][3][4])
         }
         
     }
-    //cout << "moneyyyyyy" << money << endl;
-    
+
     Node *node = new Node(caller, money);
-    //cout << "moneyyyyyy" << money << endl;
+
     delete []caller;
     // If the heap is empty, insert root node.
     if (root == NULL) {
@@ -278,7 +274,8 @@ void BinaryMaxHeap::Remove (Node *node)
 }
 
 // Print the tree level-order assisted by queue
-void BinaryMaxHeap::levelOrder() {
+void BinaryMaxHeap::levelOrder() 
+{
    // Create a queue
     Node* n = root;
     queue<Node*> q;
@@ -304,71 +301,3 @@ void BinaryMaxHeap::levelOrder() {
        q.pop();
    }
 }
-
-
-/*void BinaryMaxHeap::decreaseKey(int i, int new_val)
-{
-    harr[i] = new_val;
-    while (i != 0 && harr[parent(i)] < harr[i])
-    {
-       swap(&harr[i], &harr[parent(i)]);
-       i = parent(i);
-    }
-}
-
-int BinaryMaxHeap:: extractMax()
-{
-    if (heap_size <= 0)
-        return INT_MAX;
-    if (heap_size == 1)
-    {
-        heap_size--;
-        return harr[0];
-    }
- 
-    // Store the maximum value, and remove it from heap
-    int root = harr[0];
-    harr[0] = harr[heap_size-1];
-    heap_size--;
-    MaxHeapify(0);
- 
-    return root;
-}
-
-	
-void BinaryMaxHeap:: deleteKey(int i)
-{
-    decreaseKey(i, INT_MAX);
-    extractMax();
-}
-	
-void BinaryMaxHeap:: MaxHeapify(int i)
-{
-    int l = left(i);
-    int r = right(i);
-    int smallest = i;
-    if (l < heap_size && harr[l] < harr[i])
-        smallest = l;
-    if (r < heap_size && harr[r] < harr[smallest])
-        smallest = r;
-    if (smallest != i)
-    {
-        swap(&harr[i], &harr[smallest]);
-        MaxHeapify(smallest);
-    }
-}
-	
-/*void BinaryMaxHeap::postorder(tree_node* p, int indent = 0)
-{
-    if(p != NULL) {
-        if(p->left) postorder(p->left, indent+4);
-        if(p->right) postorder(p->right, indent+4);
-        if (indent) {
-            std::cout << std::setw(indent) << ' ';
-        }
-        cout<< p->data << "\n ";
-    }
-}*/
-		
-
-

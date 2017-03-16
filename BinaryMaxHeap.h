@@ -36,30 +36,6 @@ public:
     virtual ~BinaryMaxHeap();
     
     void levelOrder() ;
-    //void MaxHeapify(int i );
- 
-    //int parent(int i) { return (i-1)/2; }
- 
-    // to get index of left child of node at index i
-    //int left(int i) { return (2*i + 1); }
- 
-    // to get index of right child of node at index i
-    //int right(int i) { return (2*i + 2); }
- 
-    // to extract the root which is the minimum element
-    //int extractMax();
- 
-    // Decreases key value of key at index i to new_val
-    //void decreaseKey(int i, int new_val);
- 
-    // Returns the maximum key (key at root) from max heap
-    //int getMax() { return harr[0]; }
- 
-    // Deletes a key stored at index i
-    //void deleteKey(int i);
- 
-    // Inserts a new key 'k'
-    //void insertKey(int k);
     void MoveOneUp (Node *n);
     void Insert(char* temp, char tarrifarray[][3][4]);
     void Remove (Node *node);

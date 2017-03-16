@@ -16,7 +16,7 @@ public:
     virtual ~Hashtable();
     
     // Adds an item to the Hash Table.
-    void insertPoint( Point * newPoint );
+    void insertPoint( Bucket * newPoint );
        
     // Display the contents of the Hash Table to console window.
     void printTable();
